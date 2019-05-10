@@ -1,14 +1,18 @@
 const config = require('./config.js')
 const Discord = require('discord.js');
 const Manager = new Discord.ShardingManager('./bot.js', {
-    totalShards: "auto",
+    totalShards: 5,
     token: config.token
 });
 Manager.spawn();
 
+setTimeout(() => {
+    console.log("restarting")
+    procss.exit(1);
+}, 5184e5);
+
 //Guild Api
-const express = require('express')
-const bot = require('./bot')
+/*const express = require('express')
 
 const app = express()
 const router = express.Router()
@@ -39,4 +43,4 @@ app.use("/", router);
 
 app.listen(port, () => {
     console.log("inguild listening on port " + port)
-})
+})*/

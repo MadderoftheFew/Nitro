@@ -6,10 +6,14 @@ const help = require('../commands/help.js')
 const CustomCmds = require('../commands/ccmd')
 const Adblock = require('../functions/adblock')
 const Filter = require('../functions/filter')
-const store = require('../functions/storeMessages')
 const log = require('../functions/log')
-const Mixpanel = require('mixpanel');
-let mixpanel = Mixpanel.init("a4cd26822d32fdde282a60cb28c31253")
+/*const Mixpanel = require('mixpanel');
+let mixpanel = Mixpanel.init("a4cd26822d32fdde282a60cb28c31253")*/
+
+function handleError(e) {
+    let a = 0;
+    return a;
+}
 
 bot.on('message', (message) => {
 
@@ -23,9 +27,6 @@ bot.on('message', (message) => {
   Filter(message)
 
   if (message.author.bot) return;
-
-  //Stored Messages
-  //store.add(message, bot.user.id)
 
   let blocked = bot.system.getBlocked()
   if (blocked[message.author.id]) return
@@ -49,7 +50,7 @@ bot.on('message', (message) => {
 
   if (!message.content.startsWith(message.guild.prefix)) return;
 
-  if (message.channel.type === "text" && !message.channel.permissionsFor(message.guild.member(bot.user)).has("SEND_MESSAGES")) return message.author.send("**I lack the permission to send messages in this channel.**")
+  if (message.channel.type === "text" && !message.channel.permissionsFor(message.guild.member(bot.user)).has("SEND_MESSAGES")) return message.author.send("**I lack the permission to send messages in this channel.**").catch(e => handleError(e))
 
   //Custom Commands
   if (message.channel.type === "text") {
@@ -97,9 +98,9 @@ bot.on('message', (message) => {
   //log
   if (message.channel.type === "dm") log.dm(message)
   else log.g(message)
-  mixpanel.track(message.command, {
+  /*mixpanel.track(message.command, {
     b: 5
-  })
+  })*/
 
   //if (suffix.includes("<") && suffix.includes(">")) message.channel.send("*It looks like you are using the characters < and > in your command. Remember, these are only for refrence on what type of text goes there, not to actually include them.*")
   if (message.channel.type !== "text" && cmds[message.command].conf.dm === false) return message.channel.send('This command does not work in Direct Messages.');

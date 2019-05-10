@@ -1,23 +1,23 @@
 const bot = require('../bot.js')
 const request = require('request');
 const auth = require('../config')
-const Mixpanel = require('mixpanel');
-let mixpanel = Mixpanel.init("a4cd26822d32fdde282a60cb28c31253")
+
 
 bot.on('guildCreate', (g) => {
-    g.defaultChannel.send("**Hello I Am Nitro, Your helpful Server Management Bot**\n\n**Use `n!help` to get started.**\nSupport Server: <https://discordapp.com/invite/aZ2PYhn>")
+    let channels = g.channels
+    channels = channels.filter(c => c.type === "text")
+    let defaultChannel = channels.first()
+    if (defaultChannel && defaultChannel.send) defaultChannel.send('**Hello! I am Nitro, your helpful server management and community assistant Discord:tm: Bot**\n**You can get started `n!help`**\n**Changing the prefix is simply `n!setprefix "!"`**\n\n**The permission system uses Discords permissions,**\nIf you have permission to ban people normally, then you can aswell with Nitro,\nand the same goes with changing\nthe prefix and the Manage Server permission\n*You can view and edit required permissions for a command with `n!permission <command>`*\n\n**Links and Support**\nWebsite: <https://nitro.ws>\nOfficial Server: <https://discord.gg/aZ2PYhn>\nDonate: <https://www.patreon.com/nitrobot> + <https://paypal.me/funnbot>\nGithub: <https://github.com/funnbot/Nitro>\n*If you like Nitro, upvote on dbots at <https://discordbots.org/bot/nitro>*')
     dBots()
     carbon()
     discordBots()
-    mixpanel.track("Guild Join", {a: 1})
 })
-
+ 
 bot.on('guildDelete', (g) => {
     bot.config.guildLeave(g.id);
     dBots()
     carbon()
     discordBots()
-    mixpanel.track("Guild Leave", {a: -1})
 })
 
 function dBots() {
